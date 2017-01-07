@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TroyTrivia.Business.Extensions;
 using TroyTrivia.Business.Infrastructure;
 using TroyTrivia.Business.Interfaces;
@@ -15,6 +10,12 @@ namespace TroyTrivia.Business.Interactors
     public class SQLiteInteractor : IDatabase
     {
         private readonly string _sqlDatabaseFilePath;
+
+        public SQLiteInteractor()
+        {
+            _sqlDatabaseFilePath = Properties.Settings.Default.DatabaseFilePath;
+            CreateDatabaseIfNotExists(_sqlDatabaseFilePath);
+        }
 
         public SQLiteInteractor(string sqlDatabseFilePath)
         {

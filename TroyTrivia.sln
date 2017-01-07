@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TroyTrivia", "TroyTrivia.csproj", "{1245A0E6-CE9A-4531-8129-3324C459F485}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TroyTrivia.Business", "..\TroyTrivia.Business\TroyTrivia.Business.csproj", "{CE8DC2D3-5147-4998-B557-50B850CCCD20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TroyTrivia.Business", "TroyTrivia.Business\TroyTrivia.Business.csproj", "{CE8DC2D3-5147-4998-B557-50B850CCCD20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
