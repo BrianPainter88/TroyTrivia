@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace TroyTrivia.Business.Infrastructure
 {
@@ -10,70 +6,74 @@ namespace TroyTrivia.Business.Infrastructure
     {
         private const string _locationsTable = @"
         CREATE TABLE IF NOT EXISTS [Locations] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
             [Name] VARCHAR(50) NOT NULL,
             [Phone] VARCHAR(128) NULL
         )";
 
         private const string _addressesTable = @"
         CREATE TABLE IF NOT EXISTS [Addresses] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
             [Address1] VARCHAR(100) NULL,
 			[Address2] VARCHAR(100) NULL,
 			[City] VARCHAR(50) NULL,
 			[State] VARCHAR(15) NULL,
 			[ZipCode] VARCHAR(20) NULL,
 			[SpecialDirections] VARCHAR(255) NULL,
-			[_LocationId] INTEGER NOT NULL
+			[LocationId] UNIQUEIDENTIFIER NOT NULL
         )";
 
         private const string _questionsTable = @"
         CREATE TABLE IF NOT EXISTS [Questions] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
 			[QuestionText] VARCHAR(255) NULL,
-            [_QuestionTypeId] INTEGER NOT NULL,
-			[_QuestionDifficultyId] INTEGER NOT NULL,
-			[_CategoryId] INTEGER NOT NULL
+            [QuestionTypeId] UNIQUEIDENTIFIER NOT NULL,
+			[QuestionDifficultyId] UNIQUEIDENTIFIER NOT NULL,
+			[CategoryId] UNIQUEIDENTIFIER NOT NULL
         )";
 
         // Lookup Table
         private const string _questionTypesTable = @"
         CREATE TABLE IF NOT EXISTS [QuestionTypes] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-			[Type] VARCHAR(20) NOT NULL
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+			[Name] VARCHAR(50) NOT NULL
         )";
 
         // Lookup Table
         private const string _questionDifficultyTable = @"
         CREATE TABLE IF NOT EXISTS [QuestionDifficulty] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-			[Difficulty] VARCHAR(20) NOT NULL
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+			[Name] VARCHAR(20) NOT NULL
         )";
 
         // Lookup Table
         private const string _categoriesTable = @"
         CREATE TABLE IF NOT EXISTS [Categories] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
 			[Name] VARCHAR(50) NOT NULL
         )";
 
         private const string _answerKeysTable = @"
         CREATE TABLE IF NOT EXISTS [AnswerKeys] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
 			[Text] VARCHAR(255) NULL,
             [Description] VARCHAR(255) NULL,
 			[Order] INTEGER NULL,
-			[_QuestionId] INTEGER NOT NULL
+			[QuestionId] UNIQUEIDENTIFIER NOT NULL
         )";
 
-
+        private const string _teamsTable = @"
+        CREATE TABLE IF NOT EXISTS [Teams] (
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+            [Name] VARCHAR(255) NULL
+        )";
 
         // Storage Table
         private const string _questionHistoryTable = @"
         CREATE TABLE IF NOT EXISTS [QuestionHistory] (
-            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
 			[DateUsed] TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			[_LocationId] INTEGER NOT NULL
+			[LocationId] UNIQUEIDENTIFIER NOT NULL
         )";
 
         // QuestionTypes Base Data
@@ -91,21 +91,22 @@ namespace TroyTrivia.Business.Infrastructure
 	";
 
         public static IEnumerable<string> baseTables = new List<string>
-    {
-        _locationsTable,
-        _addressesTable,
-        _questionsTable,
-        _questionTypesTable,
-        _questionDifficultyTable,
-        _answerKeysTable,
-        _questionHistoryTable,
-        _categoriesTable
-    };
+        {
+            _locationsTable,
+            _addressesTable,
+            _questionsTable,
+            _questionTypesTable,
+            _questionDifficultyTable,
+            _answerKeysTable,
+            _questionHistoryTable,
+            _categoriesTable,
+            _teamsTable
+        };
 
         public static IEnumerable<string> baseTableData = new List<string>
-    {
-        _questionTypesBaseData,
-        _questionDifficultyBaseData
-    };
+        {
+            _questionTypesBaseData,
+            _questionDifficultyBaseData
+        };
     }
 }

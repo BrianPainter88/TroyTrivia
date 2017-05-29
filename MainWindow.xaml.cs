@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using TroyTrivia.Business.Entities;
+using TroyTrivia.Business.Interactors;
+using TroyTrivia.Business.Interfaces;
 
 namespace TroyTrivia
 {
@@ -20,9 +11,23 @@ namespace TroyTrivia
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static  IDatabase _sqlInteractor;
+        public Game _currentGame;
+
         public MainWindow()
         {
             InitializeComponent();
+            _sqlInteractor = new SqLiteInteractor();
+        }
+
+        private void refreshScoreboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            scoreboardDataGrid.ItemsSource = _currentGame.ScoreBoard.Scores;
+        }
+
+        private void scoreboardDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -2,36 +2,45 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
-using TroyTrivia.Business.Extensions;
+using Dapper.Contrib.Extensions;
 
 namespace TroyTrivia.Business.Entities
 {
+    [Table("Categories")]
     public class Category
     {
-        public int Id { get; set; }
+        [ExplicitKey]
+        public Guid Id { get; set; }
         public string Name { get; set; }
+
+        public Category()
+        {
+            Id = Guid.NewGuid();
+        }
 
         public void Insert(IDbConnection connection)
         {
-            connection.ExecuteNonQuery(@"INSERT INTO [Categories] ([Name]) VALUES (@CategoryName)", new { CategoryName = this.Name });
+            connection.Insert(this);
         }
 
         public void Update(IDbConnection connection)
         {
-            connection.ExecuteNonQuery(@"UPDATE [Categores] SET [Name] = @Name WHERE [Id] = @Id", new { Name = this.Name, Id = this.Id });
+            connection.Update(this);
         }
 
-        public IEnumerable<Category> Select(IDbConnection connection)
+        public static IEnumerable<Category> Select(IDbConnection connection)
         {
-            return connection.Query<Category>(@"SELECT [Id], [Name] FROM [Categories]");
+            return connection.GetAll<Category>();
         }
 
-        public IEnumerable<Category> Select(IDbConnection connection, int categoryId)
+        public static Category Select(IDbConnection connection, Guid categoryId)
         {
-            return connection.Query<Category>(@"SELECT [Id], [Name] FROM [Categories] WHERE [CategoryId] = @CategoryId", new { CategoryId = categoryId });
+            return connection.Get<Category>(categoryId);
+        }
+
+        public static Category Select(IDbConnection connection, string categoryName)
+        {
+            return connection.GetAll<Category>().FirstOrDefault(category => category.Name.Equals(categoryName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

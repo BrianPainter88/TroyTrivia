@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using TroyTrivia.Business.Extensions;
 
 namespace TroyTrivia.Business.Entities
 {
     public class Address
     {
-        public int Id { get; set; }
+        [ExplicitKey]
+        public Guid Id { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string City { get; set; }
@@ -19,13 +18,20 @@ namespace TroyTrivia.Business.Entities
         public string ZipCode { get; set; }
         public string SpecialDirections { get; set; }
 
-        public void Insert(IDbConnection connection, int locationId)
+        public Address()
         {
-            connection.ExecuteNonQuery(
-                @"INSERT INTO [Addresses] ([Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections])
-			VALUES (@Address1, @Address2, @City, @State, @ZipCode, @SpecialDirections)",
-                new { Address1 = this.Address1, Address2 = this.Address2, City = this.City, State = this.State, ZipCode = this.ZipCode, SpecialDirections = this.SpecialDirections }
+            Id = Guid.NewGuid();
+        }
+
+        public Guid Insert(IDbConnection connection, Guid locationId)
+        {
+            var addressId = connection.ExecuteScalarQuery<Guid>(
+                @"INSERT INTO [Addresses] ([Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections], [LocationId])
+			VALUES (@Id, @Address1, @Address2, @City, @State, @ZipCode, @SpecialDirections, @LocationId)",
+                new { Id = Id, Address1 = this.Address1, Address2 = this.Address2, City = this.City, State = this.State, ZipCode = this.ZipCode, SpecialDirections = this.SpecialDirections, locationId }
             );
+
+            return addressId;
         }
 
         public void Update(IDbConnection connection)
@@ -37,16 +43,16 @@ namespace TroyTrivia.Business.Entities
             );
         }
 
-        public IEnumerable<Address> Select(IDbConnection connection)
+        public static IEnumerable<Address> Select(IDbConnection connection)
         {
             return connection.Query<Address>(@"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections] FROM [Addresses]");
         }
 
-        public Address Select(IDbConnection connection, int locationId)
+        public Address Select(IDbConnection connection, Guid locationId)
         {
             return connection.QuerySingle<Address>(
-                @"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections] FROM [Addresses] WHERE [_LocationId] = @LocationId",
-                new { LocationId = locationId }
+                @"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections], [LocationId] FROM [Addresses] WHERE [LocationId] = @Id",
+                new { Id = locationId }
             );
         }
     }

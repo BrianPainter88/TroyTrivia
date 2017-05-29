@@ -25,10 +25,19 @@ namespace TroyTrivia.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\TestSQLiteDatabase.sqlite")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\TroyTriviaDatabase.sqlite")]
         public string DatabaseFilePath {
             get {
                 return ((string)(this["DatabaseFilePath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Games")]
+        public string SaveGameFolderPath {
+            get {
+                return ((string)(this["SaveGameFolderPath"]));
             }
         }
     }

@@ -2,28 +2,34 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using TroyTrivia.Business.Extensions;
 
 namespace TroyTrivia.Business.Entities
 {
     public class Location
     {
-        public int Id { get; set; }
+        [ExplicitKey]
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public Address Address { get; set; }
 
-        public int Insert(IDbConnection connection)
+        public Location()
         {
-            var locationId = connection.ExecuteNonQuery(
-                @"INSERT INTO [Locations] ([Name], [Phone]) VALUES (@Name, @Phone)",
-                new { Name = this.Name, Phone = this.Phone }
+            Id = Guid.NewGuid();
+            Address = new Address();
+        }
+
+        public Guid Insert(IDbConnection connection)
+        {
+            var locationId = connection.ExecuteScalarQuery<Guid>(
+                @"INSERT INTO [Locations] ([Id], [Name], [Phone]) VALUES (@Id, @Name, @Phone)",
+                new {Id = Id, Name = this.Name, Phone = this.Phone }
             );
 
-            Address.Insert(connection, locationId);
+            Address.Insert(connection, Id);
 
             return locationId;
         }
@@ -38,19 +44,24 @@ namespace TroyTrivia.Business.Entities
             Address.Update(connection);
         }
 
-        public IEnumerable<Location> Select(IDbConnection connection)
+        public static IEnumerable<Location> Select(IDbConnection connection)
         {
             var baseLocations = connection.Query<Location>(@"SELECT [Id], [Name], [Phone] FROM [Locations]");
 
             foreach (var baseLocation in baseLocations)
             {
-                baseLocation.Address = baseLocation.Address.Select(connection, this.Id);
+                /*
+                baseLocation.Address = connection.QuerySingle<Address>(
+                    @"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections], [LocationId] FROM Addresses WHERE LocationId = @LocationId", 
+                    new { LocationId = baseLocation.Id});
+                */
+                baseLocation.Address = baseLocation.Address.Select(connection, baseLocation.Id);
             }
 
             return baseLocations;
         }
 
-        public Location Select(IDbConnection connection, int locationId)
+        public static Location Select(IDbConnection connection, int locationId)
         {
             var location = connection.QuerySingle<Location>(
                 @"SELECT [Id], [Name], [Phone] FROM [Locations] WHERE [Id] = @LocationId",
@@ -60,6 +71,11 @@ namespace TroyTrivia.Business.Entities
             location.Address = location.Address.Select(connection, location.Id);
 
             return location;
+        }
+
+        public static Location Select(IDbConnection connection, string locationName)
+        {
+            return connection.GetAll<Location>().FirstOrDefault(l => l.Name.Equals(locationName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

@@ -7,17 +7,17 @@ using TroyTrivia.Business.Interfaces;
 
 namespace TroyTrivia.Business.Interactors
 {
-    public class SQLiteInteractor : IDatabase
+    public class SqLiteInteractor : IDatabase
     {
         private readonly string _sqlDatabaseFilePath;
 
-        public SQLiteInteractor()
+        public SqLiteInteractor()
         {
             _sqlDatabaseFilePath = Properties.Settings.Default.DatabaseFilePath;
             CreateDatabaseIfNotExists(_sqlDatabaseFilePath);
         }
 
-        public SQLiteInteractor(string sqlDatabseFilePath)
+        public SqLiteInteractor(string sqlDatabseFilePath)
         {
             _sqlDatabaseFilePath = sqlDatabseFilePath;
             CreateDatabaseIfNotExists(_sqlDatabaseFilePath);
@@ -42,10 +42,12 @@ namespace TroyTrivia.Business.Interactors
                         database.ExecuteNonQuery(commandText);
                     }
 
+                    /*
                     foreach (var commandText in BaseTableStructure.baseTableData)
                     {
                         database.ExecuteNonQuery(commandText);
                     }
+                    */
                 });
         }
 

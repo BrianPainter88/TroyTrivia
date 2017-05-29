@@ -3,7 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="DatabaseFilePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Temp\TestSQLiteDatabase.sqlite</Value>
+      <Value Profile="(Default)">C:\Temp\TroyTriviaDatabase.sqlite</Value>
+    </Setting>
+    <Setting Name="SaveGameFolderPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Temp\Games</Value>
     </Setting>
   </Settings>
 </SettingsFile>
