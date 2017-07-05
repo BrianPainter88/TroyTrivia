@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Dapper.Contrib.Extensions;
+using TroyTrivia.Business.Infrastructure;
+using TroyTrivia.Business.Interactors;
 
 namespace TroyTrivia.Business.Entities
 {
@@ -18,31 +19,51 @@ namespace TroyTrivia.Business.Entities
             Id = Guid.NewGuid();
         }
 
-        public void Insert(IDbConnection connection)
+        public void Insert()
         {
-            connection.Insert(this);
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Insert(this)
+            );
         }
 
-        public void Update(IDbConnection connection)
+        public void Update()
         {
-            connection.Update(this);
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Update(this)
+            );
         }
 
-        public static IEnumerable<QuestionDifficulty> Select(IDbConnection connection)
+        public static IEnumerable<QuestionDifficulty> Select()
         {
-            return connection.GetAll<QuestionDifficulty>();
-        }
+            var sqlInteractor = new SqliteInteractor();
 
-        public static QuestionDifficulty Select(IDbConnection connection, Guid difficultyId)
-        {
-            return connection.Get<QuestionDifficulty>(difficultyId);
-        }
-
-        public static QuestionDifficulty Select(IDbConnection connection, string difficultyName)
-        {
-            return
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
                 connection.GetAll<QuestionDifficulty>()
-                    .FirstOrDefault(d => d.Name.Equals(difficultyName, StringComparison.InvariantCultureIgnoreCase));
+            );
+        }
+
+        public static QuestionDifficulty Select(Guid difficultyId)
+        {
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Get<QuestionDifficulty>(difficultyId)
+            );
+        }
+
+        public static QuestionDifficulty Select(string difficultyName)
+        {
+            var sqlInteractor = new SqliteInteractor();
+
+            return
+                sqlInteractor.PerformDatabaseOperation((connection) =>
+                    connection.GetAll<QuestionDifficulty>()
+                        .FirstOrDefault(d => d.Name.Equals(difficultyName, StringComparison.InvariantCultureIgnoreCase))
+                );
         }
     }
 }

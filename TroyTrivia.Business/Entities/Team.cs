@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Dapper.Contrib.Extensions;
+using TroyTrivia.Business.Infrastructure;
+using TroyTrivia.Business.Interactors;
 
 namespace TroyTrivia.Business.Entities
 {
@@ -17,42 +18,64 @@ namespace TroyTrivia.Business.Entities
             Id = Guid.NewGuid();
         }
 
-        public void Insert(IDbConnection connection)
+        public void Insert()
         {
-            if (GetCountOfTeamsWithName(connection) == 0)
+            var sqlInteractor = new SqliteInteractor();
+
+            if (GetCountOfTeamsWithName() == 0)
             {
-                connection.Insert(new Team() { Name = this.Name });
+                sqlInteractor.PerformDatabaseOperation((connection) =>
+                    connection.Insert(new Team() {Name = this.Name})
+                );
             }
-            //connection.ExecuteNonQuery(@"INSERT INTO [Teams] ([Name]) VALUES (@Name)", new { Name = this.Name });
         }
 
-        public void Update(IDbConnection connection)
+        public void Update()
         {
-            if (GetCountOfTeamsWithName(connection) == 0)
+            var sqlInteractor = new SqliteInteractor();
+
+            if (GetCountOfTeamsWithName() == 0)
             {
-                connection.Update(this);
+                sqlInteractor.PerformDatabaseOperation((connection) =>
+                    connection.Update(this)
+                );
             }
-            //connection.ExecuteNonQuery(@"UPDATE [Teams] SET [Name] = @Name WHERE [Id] = @Id", new { Name = this.Name, Id = this.Id });
         }
 
-        private int GetCountOfTeamsWithName(IDbConnection connection)
+        private int GetCountOfTeamsWithName()
         {
-            return connection.GetAll<Team>().Count(team => team.Name == this.Name);
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.GetAll<Team>().Count(team => team.Name == this.Name)
+            );
         }
 
-        public static IEnumerable<Team> Select(IDbConnection connection)
+        public static IEnumerable<Team> Select()
         {
-            return connection.GetAll<Team>();
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.GetAll<Team>()
+            );
         }
 
-        public static Team Select(IDbConnection connection, Guid teamId)
+        public static Team Select(Guid teamId)
         {
-            return connection.Get<Team>(teamId);
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Get<Team>(teamId)
+            );
         }
 
-        public void Delete(IDbConnection connection)
+        public void Delete()
         {
-            connection.Delete(this);
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Delete(this)
+            );
         }
     }
 }

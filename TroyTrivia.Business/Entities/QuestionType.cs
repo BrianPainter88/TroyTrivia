@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Dapper.Contrib.Extensions;
+using TroyTrivia.Business.Infrastructure;
+using TroyTrivia.Business.Interactors;
 
 namespace TroyTrivia.Business.Entities
 {
@@ -18,29 +19,49 @@ namespace TroyTrivia.Business.Entities
             Id = Guid.NewGuid();
         }
 
-        public void Insert(IDbConnection connection)
+        public void Insert()
         {
-            connection.Insert(this);
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Insert(this)
+            );
         }
 
-        public void Update(IDbConnection connection)
+        public void Update()
         {
-            connection.Update(this);
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Update(this)
+            );
         }
 
-        public static IEnumerable<QuestionType> Select(IDbConnection connection)
+        public static IEnumerable<QuestionType> Select()
         {
-            return connection.GetAll<QuestionType>();
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.GetAll<QuestionType>()
+            );
         }
 
-        public static QuestionType Select(IDbConnection connection, Guid typeId)
+        public static QuestionType Select(Guid typeId)
         {
-            return connection.Get<QuestionType>(typeId);
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Get<QuestionType>(typeId)
+            );
         }
 
-        public static QuestionType Select(IDbConnection connection, string typeName)
+        public static QuestionType Select(string typeName)
         {
-            return connection.GetAll<QuestionType>().FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.InvariantCultureIgnoreCase));
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.GetAll<QuestionType>().FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.InvariantCultureIgnoreCase))
+            );
         }
     }
 }

@@ -63,12 +63,18 @@
             this.txtTeamName = new System.Windows.Forms.TextBox();
             this.loadGameFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.lblLocationTitle = new System.Windows.Forms.Label();
+            this.btnAddQuestions = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.lblOpenTriviaDbLabel = new System.Windows.Forms.Label();
+            this.lblOpenTriviaQuestionsAddStatus = new System.Windows.Forms.Label();
+            this.btnSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grdScoreboard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scoreBoardBindingSource)).BeginInit();
             this.pnlQuestions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.questionsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bndQuestions)).BeginInit();
             this.bndQuestions.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCreateGame
@@ -179,9 +185,9 @@
             this.pnlQuestions.Controls.Add(this.rchAnswerPanel);
             this.pnlQuestions.Controls.Add(this.rchQuestionPanel);
             this.pnlQuestions.Controls.Add(this.bndQuestions);
-            this.pnlQuestions.Location = new System.Drawing.Point(30, 67);
+            this.pnlQuestions.Location = new System.Drawing.Point(30, 166);
             this.pnlQuestions.Name = "pnlQuestions";
-            this.pnlQuestions.Size = new System.Drawing.Size(863, 306);
+            this.pnlQuestions.Size = new System.Drawing.Size(863, 199);
             this.pnlQuestions.TabIndex = 3;
             // 
             // lblAnswerText
@@ -386,11 +392,60 @@
             this.lblLocationTitle.TabIndex = 6;
             this.lblLocationTitle.Text = "Troy Trivia";
             // 
+            // btnAddQuestions
+            // 
+            this.btnAddQuestions.Location = new System.Drawing.Point(552, 375);
+            this.btnAddQuestions.Name = "btnAddQuestions";
+            this.btnAddQuestions.Size = new System.Drawing.Size(122, 23);
+            this.btnAddQuestions.TabIndex = 7;
+            this.btnAddQuestions.Text = "Add Questions";
+            this.btnAddQuestions.UseVisualStyleBackColor = true;
+            this.btnAddQuestions.Click += new System.EventHandler(this.btnAddQuestions_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lblOpenTriviaDbLabel);
+            this.panel1.Controls.Add(this.lblOpenTriviaQuestionsAddStatus);
+            this.panel1.Location = new System.Drawing.Point(464, 372);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(429, 100);
+            this.panel1.TabIndex = 8;
+            // 
+            // lblOpenTriviaDbLabel
+            // 
+            this.lblOpenTriviaDbLabel.AutoSize = true;
+            this.lblOpenTriviaDbLabel.Location = new System.Drawing.Point(4, 8);
+            this.lblOpenTriviaDbLabel.Name = "lblOpenTriviaDbLabel";
+            this.lblOpenTriviaDbLabel.Size = new System.Drawing.Size(82, 13);
+            this.lblOpenTriviaDbLabel.TabIndex = 1;
+            this.lblOpenTriviaDbLabel.Text = "Open Trivia Db:";
+            // 
+            // lblOpenTriviaQuestionsAddStatus
+            // 
+            this.lblOpenTriviaQuestionsAddStatus.AutoSize = true;
+            this.lblOpenTriviaQuestionsAddStatus.Location = new System.Drawing.Point(216, 8);
+            this.lblOpenTriviaQuestionsAddStatus.Name = "lblOpenTriviaQuestionsAddStatus";
+            this.lblOpenTriviaQuestionsAddStatus.Size = new System.Drawing.Size(0, 13);
+            this.lblOpenTriviaQuestionsAddStatus.TabIndex = 0;
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.Location = new System.Drawing.Point(30, 67);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(122, 29);
+            this.btnSettings.TabIndex = 9;
+            this.btnSettings.Text = "Settings";
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1285, 396);
+            this.ClientSize = new System.Drawing.Size(1285, 511);
+            this.Controls.Add(this.btnSettings);
+            this.Controls.Add(this.btnAddQuestions);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.lblLocationTitle);
             this.Controls.Add(this.txtTeamName);
             this.Controls.Add(this.btnAddTeam);
@@ -409,6 +464,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.bndQuestions)).EndInit();
             this.bndQuestions.ResumeLayout(false);
             this.bndQuestions.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -449,6 +506,11 @@
         private System.Windows.Forms.DataGridViewButtonColumn colDecrementScore;
         private System.Windows.Forms.DataGridViewTextBoxColumn scoresDataGridViewTextBoxColumn;
         private System.Windows.Forms.Label lblLocationTitle;
+        private System.Windows.Forms.Button btnAddQuestions;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lblOpenTriviaQuestionsAddStatus;
+        private System.Windows.Forms.Label lblOpenTriviaDbLabel;
+        private System.Windows.Forms.Button btnSettings;
     }
 }
 

@@ -185,5 +185,26 @@ namespace TroyTrivia.UI
             this.grdScoreboard.DataSource = _currentGame.ScoreBoard.Scores.Select(d => new { d.Key, d.Value }).OrderByDescending(d => d.Value).ToList();
             this.grdScoreboard.Update();
         }
+
+        private async void btnAddQuestions_Click(object sender, EventArgs e)
+        {
+            lblOpenTriviaQuestionsAddStatus.Text = "processing...";
+
+            if (await QuestionsInteractor.CreateOpenTriviaDbQuestions())
+            {
+                MessageBox.Show("Questions have been added successfully.", "Success", MessageBoxButtons.OK);
+            }
+
+            lblOpenTriviaQuestionsAddStatus.Text = string.Empty;
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            using (var settingsForm = new SettingsForm())
+            {
+                settingsForm.ShowDialog();
+                
+            }
+        }
     }
 }

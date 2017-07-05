@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using TroyTrivia.Business.Extensions;
+using TroyTrivia.Business.Infrastructure;
+using TroyTrivia.Business.Interactors;
 
 namespace TroyTrivia.Business.Entities
 {
@@ -23,36 +24,71 @@ namespace TroyTrivia.Business.Entities
             Id = Guid.NewGuid();
         }
 
-        public Guid Insert(IDbConnection connection, Guid locationId)
+        public Guid Insert(Guid locationId)
         {
-            var addressId = connection.ExecuteScalarQuery<Guid>(
-                @"INSERT INTO [Addresses] ([Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections], [LocationId])
+            var sqlInteractor = new SqliteInteractor();
+
+            var addressId = sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.ExecuteScalarQuery<Guid>(
+                    @"INSERT INTO [Addresses] ([Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections], [LocationId])
 			VALUES (@Id, @Address1, @Address2, @City, @State, @ZipCode, @SpecialDirections, @LocationId)",
-                new { Id = Id, Address1 = this.Address1, Address2 = this.Address2, City = this.City, State = this.State, ZipCode = this.ZipCode, SpecialDirections = this.SpecialDirections, locationId }
+                    new
+                    {
+                        Id = Id,
+                        Address1 = this.Address1,
+                        Address2 = this.Address2,
+                        City = this.City,
+                        State = this.State,
+                        ZipCode = this.ZipCode,
+                        SpecialDirections = this.SpecialDirections,
+                        locationId
+                    }
+                )
             );
 
             return addressId;
         }
 
-        public void Update(IDbConnection connection)
+        public void Update()
         {
-            connection.ExecuteNonQuery(
-                @"UPDATE [Addresses] SET [Address1] = @Address1, [Address2] = @Address2, [City] = @City, [State] = @State, [ZipCode] = @ZipCode, [SpecialDirections] = @SpecialDirections 
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.ExecuteNonQuery(
+                    @"UPDATE [Addresses] SET [Address1] = @Address1, [Address2] = @Address2, [City] = @City, [State] = @State, [ZipCode] = @ZipCode, [SpecialDirections] = @SpecialDirections 
 			WHERE [Id] = @AddressId",
-                new { Address1 = this.Address1, Address2 = this.Address2, City = this.City, State = this.State, ZipCode = this.ZipCode, SpecialDirections = this.SpecialDirections, AddressId = this.Id }
+                    new
+                    {
+                        Address1 = this.Address1,
+                        Address2 = this.Address2,
+                        City = this.City,
+                        State = this.State,
+                        ZipCode = this.ZipCode,
+                        SpecialDirections = this.SpecialDirections,
+                        AddressId = this.Id
+                    }
+                )
             );
         }
 
-        public static IEnumerable<Address> Select(IDbConnection connection)
+        public static IEnumerable<Address> Select()
         {
-            return connection.Query<Address>(@"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections] FROM [Addresses]");
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Query<Address>(@"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections] FROM [Addresses]")
+            );
         }
 
-        public Address Select(IDbConnection connection, Guid locationId)
+        public Address Select(Guid locationId)
         {
-            return connection.QuerySingle<Address>(
-                @"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections], [LocationId] FROM [Addresses] WHERE [LocationId] = @Id",
-                new { Id = locationId }
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.QuerySingle<Address>(
+                    @"SELECT [Id], [Address1], [Address2], [City], [State], [ZipCode], [SpecialDirections], [LocationId] FROM [Addresses] WHERE [LocationId] = @Id",
+                    new {Id = locationId}
+                )
             );
         }
     }

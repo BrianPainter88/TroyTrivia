@@ -59,6 +59,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.1\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\OpenTriviaDb.cs" />
     <Compile Include="Containers\PointSegment.cs" />
     <Compile Include="Containers\TeamSegment.cs" />
     <Compile Include="Entities\Address.cs" />
@@ -88,8 +90,12 @@
     <Compile Include="Infrastructure\BaseTableStructure.cs" />
     <Compile Include="Infrastructure\DatabaseOperations.cs" />
     <Compile Include="Interactors\FilesInteractor.cs" />
+    <Compile Include="Interactors\HttpInteractor.cs" />
+    <Compile Include="Interactors\JsonInteractor.cs" />
+    <Compile Include="Interactors\QuestionsInteractor.cs" />
     <Compile Include="Interactors\SqLiteInteractor.cs" />
     <Compile Include="Interfaces\IDatabase.cs" />
+    <Compile Include="Interfaces\IDialogForm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

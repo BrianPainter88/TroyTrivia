@@ -7,27 +7,26 @@ using TroyTrivia.Business.Interfaces;
 
 namespace TroyTrivia.Business.Interactors
 {
-    public class SqLiteInteractor : IDatabase
+    public class SqliteInteractor : IDatabase
     {
-        private readonly string _sqlDatabaseFilePath;
+        private readonly string _sqlDatabaseFilePath = Properties.Settings.Default.DatabaseFilePath;
 
-        public SqLiteInteractor()
+        public SqliteInteractor()
         {
-            _sqlDatabaseFilePath = Properties.Settings.Default.DatabaseFilePath;
             CreateDatabaseIfNotExists(_sqlDatabaseFilePath);
         }
 
-        public SqLiteInteractor(string sqlDatabseFilePath)
+        public SqliteInteractor(string sqlDatabaseFilePath)
         {
-            _sqlDatabaseFilePath = sqlDatabseFilePath;
+            _sqlDatabaseFilePath = sqlDatabaseFilePath;
             CreateDatabaseIfNotExists(_sqlDatabaseFilePath);
         }
 
         public void CreateDatabaseIfNotExists(string databaseFilePath)
         {
-            if (false == File.Exists(_sqlDatabaseFilePath))
+            if (false == File.Exists(databaseFilePath))
             {
-                SQLiteConnection.CreateFile(_sqlDatabaseFilePath);
+                SQLiteConnection.CreateFile(databaseFilePath);
 
                 CreateBaseTableStructure();
             }

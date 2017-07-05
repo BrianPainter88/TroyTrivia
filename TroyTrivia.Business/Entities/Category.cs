@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Dapper.Contrib.Extensions;
+using TroyTrivia.Business.Infrastructure;
+using TroyTrivia.Business.Interactors;
 
 namespace TroyTrivia.Business.Entities
 {
@@ -18,29 +19,50 @@ namespace TroyTrivia.Business.Entities
             Id = Guid.NewGuid();
         }
 
-        public void Insert(IDbConnection connection)
+        public void Insert()
         {
-            connection.Insert(this);
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Insert(this)
+            );
         }
 
-        public void Update(IDbConnection connection)
+        public void Update()
         {
-            connection.Update(this);
+            var sqlInteractor = new SqliteInteractor();
+
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Update(this)
+            );
         }
 
-        public static IEnumerable<Category> Select(IDbConnection connection)
+        public static IEnumerable<Category> Select()
         {
-            return connection.GetAll<Category>();
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.GetAll<Category>()
+            );
         }
 
-        public static Category Select(IDbConnection connection, Guid categoryId)
+        public static Category Select(Guid categoryId)
         {
-            return connection.Get<Category>(categoryId);
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Get<Category>(categoryId)
+            );
         }
 
-        public static Category Select(IDbConnection connection, string categoryName)
+        public static Category Select(string categoryName)
         {
-            return connection.GetAll<Category>().FirstOrDefault(category => category.Name.Equals(categoryName, StringComparison.InvariantCultureIgnoreCase));
+            var sqlInteractor = new SqliteInteractor();
+
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.GetAll<Category>()
+                    .FirstOrDefault(category => category.Name.Equals(categoryName, StringComparison.InvariantCultureIgnoreCase))
+            );
         }
     }
 }

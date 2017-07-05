@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 using TroyTrivia.Business.Entities;
+using TroyTrivia.Business.Interfaces;
 
 namespace TroyTrivia.UI.Forms
 {
-    public partial class LocationForm : Form
+    public partial class LocationForm : Form, IDialogForm
     {
         public string LocationName { get; set; }
         public string Phone { get; set; }

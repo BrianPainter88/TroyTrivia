@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Data;
 using Dapper.Contrib.Extensions;
+using TroyTrivia.Business.Infrastructure;
+using TroyTrivia.Business.Interactors;
 
 namespace TroyTrivia.Business.Entities
 {
@@ -24,27 +25,28 @@ namespace TroyTrivia.Business.Entities
             QuestionId = questionId;
         }
 
-        public void Insert(IDbConnection connection)
+        public void Insert()
         {
-            connection.Insert(this);
-            /*
-            connection.ExecuteNonQuery(@"
-		   		INSERT INTO AnswerKeys ([Text], [Description], [Order], [_QuestionId]) 
-				VALUES (@Text, @Description, @Order, @QuestionId);",
-                    new { Text = this.Text, Description = this.Description, Order = this.Order, QuestionId = questionId }
-                );
-            */
+            var sqlInteractor = new SqliteInteractor();
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Insert(this)
+            );
         }
 
-        public void Update(IDbConnection connection)
+        public void Update()
         {
-            connection.Update(this);
-            /*
-            connection.ExecuteNonQuery(
-                @"UPDATE [AnswersKeys] SET [Text] = @Text, [Description] = @Description, [Order] = @Order WHERE [Id] = @AnswerKeyId",
-                new { Text = this.Text, Description = this.Description, Order = this.Order, AnserKeyId = this.Id }
+            var sqlInteractor = new SqliteInteractor();
+            sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Update(this)
             );
-            */
+        }
+
+        public bool Delete()
+        {
+            var sqlInteractor = new SqliteInteractor();
+            return sqlInteractor.PerformDatabaseOperation((connection) =>
+                connection.Delete(this)
+            );
         }
     }
 }

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using TroyTrivia.Business.Entities;
-using TroyTrivia.Business.Interactors;
 using TroyTrivia.Business.Interfaces;
 
 namespace TroyTrivia.UI.Forms
 {
-    public partial class NewGameForm : Form
+    public partial class NewGameForm : Form, IDialogForm
     {
-        private static readonly string _databasePath = Business.Properties.Settings.Default.DatabaseFilePath;
         private Question _currentQuestion;
         private HashSet<Question> _gameQuestions;
 
@@ -29,46 +27,37 @@ namespace TroyTrivia.UI.Forms
         
         private void FillFormData()
         {
-            IDatabase sqlInteractor = new SqLiteInteractor();
-            var connection = sqlInteractor.GetDatabaseConnection();
-
-            var locationList = Business.Entities.Location.Select(connection).ToList();
+            var locationList = Business.Entities.Location.Select().ToList();
             cmbLocation.DataSource = locationList.Select(l => l.Name).ToList();
             cmbLocation.Update();
 
-            var difficultyList = QuestionDifficulty.Select(connection).Select(q => q.Name).ToList();
+            var difficultyList = QuestionDifficulty.Select().Select(q => q.Name).ToList();
             cmbDifficulty.DataSource = difficultyList;
             cmbDifficulty.Update();
 
-            var typeList = QuestionType.Select(connection).Select(q => q.Name).ToList();
+            var typeList = QuestionType.Select().Select(q => q.Name).ToList();
             cmbType.DataSource = typeList;
             cmbType.Update();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            IDatabase sqlInteractor = new SqLiteInteractor();
-            var connection = sqlInteractor.GetDatabaseConnection();
-
             PageResult = DialogResult.OK;
             Game.Questions = _gameQuestions;
-            Game.Location = Business.Entities.Location.Select(connection, cmbLocation.Text);
+            Game.Location = Business.Entities.Location.Select(cmbLocation.Text);
             this.Close();
         }
 
         private void btnGenerateRandomQuestion_Click(object sender, EventArgs e)
         {
-            IDatabase sqlInteractor = new SqLiteInteractor();
-            var connection = sqlInteractor.GetDatabaseConnection();
-
-            var selectedDifficulty = QuestionDifficulty.Select(connection, cmbDifficulty.SelectedValue.ToString());
-            var selectedType =  QuestionType.Select(connection, cmbType.SelectedValue.ToString());
+            var selectedDifficulty = QuestionDifficulty.Select(cmbDifficulty.SelectedValue.ToString());
+            var selectedType =  QuestionType.Select(cmbType.SelectedValue.ToString());
 
             if (selectedDifficulty != null && selectedType != null)
             {
                 try
                 {
-                    _currentQuestion = Question.GetRandomQuestion(connection, selectedDifficulty.Id, selectedType.Id);
+                    _currentQuestion = Question.GetRandomQuestion(selectedDifficulty.Id, selectedType.Id);
                     txtCategory.Text = _currentQuestion.Category.Name;
                     rchQuestion.Text = _currentQuestion.QuestionText;
                     rchAnswer.Text = _currentQuestion.GetAnswer();
@@ -82,7 +71,7 @@ namespace TroyTrivia.UI.Forms
             {
                 try
                 {
-                    _currentQuestion = Question.GetRandomQuestionByType(connection, selectedDifficulty.Id);
+                    _currentQuestion = Question.GetRandomQuestionByDifficulty(selectedDifficulty.Id);
                     txtCategory.Text = _currentQuestion.Category.Name;
                     rchQuestion.Text = _currentQuestion.QuestionText;
                     rchAnswer.Text = _currentQuestion.GetAnswer();
@@ -96,7 +85,7 @@ namespace TroyTrivia.UI.Forms
             {
                 try
                 {
-                    _currentQuestion = Question.GetRandomQuestionByType(connection, selectedType.Id);
+                    _currentQuestion = Question.GetRandomQuestionByType( selectedType.Id);
                     txtCategory.Text = _currentQuestion.Category.Name;
                     rchQuestion.Text = _currentQuestion.QuestionText;
                     rchAnswer.Text = _currentQuestion.GetAnswer();
@@ -121,9 +110,6 @@ namespace TroyTrivia.UI.Forms
 
         private void btnAddLocation_Click(object sender, EventArgs e)
         {
-            IDatabase sqlInteractor = new SqLiteInteractor();
-            var connection = sqlInteractor.GetDatabaseConnection();
-
             using (var locationForm = new LocationForm())
             {
                 locationForm.ShowDialog();
@@ -136,12 +122,12 @@ namespace TroyTrivia.UI.Forms
                         Address = locationForm.Address
                     };
 
-                    location.Insert(connection);
+                    location.Insert();
                 }
 
             }
 
-            var locationList = Business.Entities.Location.Select(connection).ToList();
+            var locationList = Business.Entities.Location.Select().ToList();
             cmbLocation.DataSource = locationList.Select(l => l.Name).ToList();
             cmbLocation.Update();
         }
